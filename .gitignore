@@ -1,2 +1,6 @@
 *.pyc
 *~
+*.vtk
+*.stl
+*.xyz
+*.obj

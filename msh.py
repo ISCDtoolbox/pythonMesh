@@ -4,8 +4,8 @@ import itertools
 
 class Mesh:
 
+    # .mesh import functions
     keywords = ["Vertices", "Triangles", "Quadrilaterals","Tetrahedra","SolAtVertices"]
-
     def analyse(self, index, line):
         for k,kwd in enumerate(self.keywords):
             if self.found[k] and kwd not in self.done:
@@ -58,34 +58,35 @@ class Mesh:
             self.get_infos(self.path[:-5]+".sol")
             with open(self.path[:-5]+".sol") as f:
                     if self.numItems[4]:
-                        #Try to read a single float solution file
-                        try:
-                            f.seek(0)
+                        f.seek(0)
+                        nItems = len(f.readlines()[self.begin[4]].strip().split())
+                        f.seek(0)
+                        #Read a scalar
+                        if nItems == 1:
                             self.scalars = np.array([float(l) for l in itertools.islice(f, self.begin[4], self.begin[4] + self.numItems[4])])
                             self.solMin = np.min(self.scalars)
                             self.solMax = np.max(self.scalars)
-                        except:
-                            self.scalars=np.array([])
-                        #Try to read a vector
-                        try:
-                            f.seek(0)
+                            self.vectors = np.array([])
+                        #Read a vector
+                        if nItems == 3:
                             self.vectors = np.array([ [float(x) for x in l.strip().split()[:3]] for l in itertools.islice(f, self.begin[4], self.begin[4] + self.numItems[4])])
                             self.vecMin = np.min(np.linalg.norm(self.vectors,axis=1))
                             self.vecMax = np.min(np.linalg.norm(self.vectors,axis=1))
-                        except:
-                            self.vectors=np.array([])
-                        #Try to read a scalar after a vector
-                        try:
+                            self.scalars=np.array([])
+                        #Read a scalar after a vector
+                        if nItems == 4:
+                            self.vectors = np.array([ [float(x) for x in l.strip().split()[:3]] for l in itertools.islice(f, self.begin[4], self.begin[4] + self.numItems[4])])
+                            self.vecMin = np.min(np.linalg.norm(self.vectors,axis=1))
+                            self.vecMax = np.min(np.linalg.norm(self.vectors,axis=1))
                             f.seek(0)
                             self.scalars = np.array([float(l.split()[3]) for l in itertools.islice(f, self.begin[4], self.begin[4] + self.numItems[4])])
                             self.solMin = np.min(self.scalars)
                             self.solMax = np.max(self.scalars)
-                        except:
-                            self.scalars=np.array([])
                     else:
                         self.scalars = np.array([])
                         self.vectors = np.array([])
 
+    # Constructor
     def __init__(self, path=None, cube=None):
         if cube:
             self.verts = np.array([
@@ -306,6 +307,7 @@ class Mesh:
 
         return mesh
 
+    # .mesh export functions
     def writeArray(self, path, head, array, form, firstOpening=False, incrementIndex=False):
         if len(array):
             if firstOpening:
@@ -333,3 +335,72 @@ class Mesh:
             f.write("\nEnd")
     def writeSol(self,path):
         self.writeArray(path,"MeshVersionFormatted 2\nDimension 3\n\nSolAtVertices\n"+str(len(self.scalars))+"\n1 1", self.scalars, '%.8f', firstOpening=True)
+
+    # other export functions
+    def writeOBJ(self, path):
+        with open(path, "w") as f:
+            f.write("o meshExport\n")
+            for v in self.verts:
+                f.write("v %.8f %.8f %.8f\n" % (v[0], v[1], v[2]))
+            for t in self.tris:
+                f.write("f %i %i %i\n" % (t[0], t[1], t[2]))
+            f.write("end solid")
+    def writeSTL(self, path):
+        with open(path, "w") as f:
+            f.write("solid meshExport\n")
+            for t in self.tris:
+                output = "facet normal " + str(1) + " " + str(1) + " " + str(1) + "\n"
+                output+= "   outer loop\n"
+                output+= "     vertex %.8f %.8f %.8f\n" % (self.verts[t[0],0], self.verts[t[0],1], self.verts[t[0],2])
+                output+= "     vertex %.8f %.8f %.8f\n" % (self.verts[t[1],0], self.verts[t[1],1], self.verts[t[1],2])
+                output+= "     vertex %.8f %.8f %.8f\n" % (self.verts[t[2],0], self.verts[t[2],1], self.verts[t[2],2])
+                output+= "   endloop\n"
+                output+= "endfacet\n"
+                f.write(output)
+            f.write("end solid")
+    def writeVTK(self, path):
+        with open(path, "w") as f:
+            header =  "# vtk DataFile Version 2.0\nMesh export\nASCII\n"
+            header += "DATASET UNSTRUCTURED_GRID\n\n"
+            f.write(header)
+            # Writing vertices
+            f.write("POINTS " + str(len(self.verts)) + " float\n")
+            for v in self.verts:
+                f.write('%.8f %.8f %.8f\n' % (v[0],v[1],v[2]))
+            f.write("\n")
+            #Writing the cells
+            f.write("CELLS " + str(len(self.tets) + len(self.tris)) + " " + str(5 * len(self.tets) + 4 * len(self.tris)) + "\n")
+            if len(self.tris)>0:
+                for t in self.tris:
+                    f.write("3 %i %i %i\n" % (t[0], t[1], t[2]))
+                f.write("\n")
+            if len(self.tets)>0:
+                for t in self.tets:
+                    f.write("4 %i %i %i %i\n" % (t[0], t[1], t[2], t[3]))
+                f.write("\n")
+            f.write("CELL_TYPES " + str(len(self.tets)) + "\n")
+            if len(self.tris)>0:
+                for t in self.tris:
+                    f.write("5\n")
+            if len(self.tets)>0:
+                for t in self.tets:
+                    f.write("10\n")
+            f.write("\n")
+            # Writing the scalar and vector data
+            if len(self.scalars)>0 or len(self.vectors)>0:
+                dataHeader = "POINT_DATA " + str(len(self.verts)) + "\n"
+                #Writing the scalar fields
+                if len(self.scalars)>0:
+                    f.write("SCALARS pressure float\nLOOKUP_TABLE default\n")
+                    for v in self.scalars:
+                        f.write("%.8f\n" % v)
+                    f.write("\n")
+                if len(self.vectors)>0:
+                    f.write("VECTORS velocity float\n")
+                    for v in self.vectors:
+                        f.write("%.8f %.8f %.8f\n" % (v[0],v[1],v[2]))
+    def writeXYZ(self, path):
+        with open(path,"w") as f:
+            for v in self.verts:
+                f.write("%.8f %.8f %.8f\n" % (v[0], v[1], v[2]))
+    #def writeOFF(self):
