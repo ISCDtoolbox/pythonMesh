@@ -21,6 +21,7 @@ class export_mesh_operator(bpy.types.Operator, ExportHelper):
     filename_ext = ".mesh"
 
     refAtVerts = bpy.props.BoolProperty(name="refAtVerts", description="reference at vertices", default=False)
+    triangulate = bpy.props.BoolProperty(name="triangulate", description="triangulate the mesh", default=True)
 
     @classmethod
     def poll(cls, context):
@@ -51,6 +52,10 @@ def operatorFunction(operator, context, filepath, refAtVerts):
     bpy.ops.mesh.select_all(action='DESELECT')
     bpy.ops.mesh.select_face_by_sides(number=4, type='GREATER')
     bpy.ops.mesh.quads_convert_to_tris(quad_method='BEAUTY', ngon_method='BEAUTY')
+    if triangulate:
+        bpy.ops.mesh.select_all(action='DESELECT')
+        bpy.ops.mesh.select_face_by_sides(number=3, type='GREATER')
+        bpy.ops.mesh.quads_convert_to_tris(quad_method='BEAUTY', ngon_method='BEAUTY')
     bpy.ops.object.editmode_toggle()
 
     mesh = obj.to_mesh(scene, APPLY_MODIFIERS, 'PREVIEW')
@@ -68,9 +73,11 @@ def operatorFunction(operator, context, filepath, refAtVerts):
                     for v in f.vertices:
                         verts[v][3] = f.material_index + 1
 
-
-    #Open and write the .mesh file
-    msh.writeMesh(filepath, verts, triangles, quads)
+    exportMesh = msh.Mesh()
+    exportMesh.verts = msh.np.array(verts)
+    exportMesh.tris  = msh.np.array(triangles)
+    exportMesh.quads = msh.np.array(quads)
+    exportMesh.write(filepath)
 
     #Solutions according to the weight paint mode (0 to 1 by default)
     vgrp = bpy.context.active_object.vertex_groups.keys()
@@ -83,10 +90,12 @@ def operatorFunction(operator, context, filepath, refAtVerts):
                     cols[v] = float(GROUP.weight(v))
                 except:
                     continue
-        msh.writeSol(filepath[:-5] + ".sol",cols)
+        exportMesh.scalars = msh.np.array(cols)
+        exportMesh.writeSol(filepath[:-5] + ".sol")
 
     bpy.ops.object.delete()
     bpy.data.meshes.remove(mesh)
+    del exportMesh
 
     return {'FINISHED'}
 

@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+#-*- coding: utf-8 -*-
 import sys
 import numpy as np
 import itertools
@@ -49,7 +51,7 @@ class Mesh:
                         break
                 return np.array(arr,dtype=dt)
             except:
-                print "Did not manage to read the array"
+                print("Did not manage to read the array")
                 sys.exit()
             sys.exit()
     def readSol(self,path=None):
@@ -155,20 +157,20 @@ class Mesh:
         self.vectors=np.array([])
 
     def caracterize(self):
-        print "File " + self.path
+        print("File " + self.path)
         if len(self.verts):
-            print "\tVertices:        ", len(self.verts)
-            print "\tBounding box:    ", "[%.2f, %.2f] [%.2f, %.2f] [%.2f, %.2f]" % (self.xmin, self.xmax,self.ymin, self.ymax, self.zmin, self.zmax)
+            print("\tVertices:        ", len(self.verts))
+            print("\tBounding box:    ", "[%.2f, %.2f] [%.2f, %.2f] [%.2f, %.2f]" % (self.xmin, self.xmax,self.ymin, self.ymax, self.zmin, self.zmax))
         if len(self.tris):
-            print "\tTriangles:       ", len(self.tris)
+            print("\tTriangles:       ", len(self.tris))
         if len(self.quads):
-            print "\tQuadrilaterals:  ", len(self.quads)
+            print("\tQuadrilaterals:  ", len(self.quads))
         if len(self.tets):
-            print "\tTetrahedra:      ", len(self.tets)
+            print("\tTetrahedra:      ", len(self.tets))
         if len(self.scalars):
-            print "\tScalars:         ", len(self.scalars)
+            print("\tScalars:         ", len(self.scalars))
         if len(self.vectors):
-            print "\tVectors:         ", len(self.vectors)
+            print("\tVectors:         ", len(self.vectors))
     def computeBBox(self):
         self.xmin, self.ymin, self.zmin = np.amin(self.verts[:,:3],axis=0)
         self.xmax, self.ymax, self.zmax = np.amax(self.verts[:,:3],axis=0)
@@ -313,7 +315,7 @@ class Mesh:
             if firstOpening:
                 f = path
             else:
-                f = open(path,"a")
+                f = open(path,"ab")
             if incrementIndex:
                 array = np.copy(array)
                 array[:,:-1]+=1

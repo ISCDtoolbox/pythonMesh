@@ -28,15 +28,23 @@ class operator(bpy.types.Operator, ExportHelper):
             return {'FINISHED'}
 def operatorFunction(operator, context, filepath):
 
-    [verts, tris, quads] = msh.readMesh(filepath)
+    mesh = msh.Mesh(filepath)
+    mesh.tets = np.array([])
+    mesh.discardUnused()
 
     meshes = []
-    rTris = tris[:,-1].tolist() if tris.size else []
-    rQuads = quads[:,-1].tolist() if quads.size else []
-    tris = [t.tolist() for t in tris]
-    quads = [q.tolist() for q in quads]
-    verts = [v.tolist()[:-1] for v in verts]
+    rTris = mesh.tris[:,-1].tolist() if len(mesh.tris)>0 else []
+    rQuads = mesh.quads[:,-1].tolist() if len(mesh.quads)>0 else []
+    tris = [t.tolist() for t in mesh.tris]
+    quads = [q.tolist() for q in mesh.quads]
+    verts = [v.tolist()[:-1] for v in mesh.verts]
     REFS = set(rTris + rQuads)
+
+    """Needs to load the solution as vertex weight
+    mesh.readSol()
+    scal = mesh.scalars
+    """
+
     for i,r in enumerate(REFS):
         refFaces = [t[:-1] for t in tris + quads if t[-1]==r]
         #refFaces = refFaces + [[q[:-1] for q in quads if q[-1] == r]]
