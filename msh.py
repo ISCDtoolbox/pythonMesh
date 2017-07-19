@@ -2,6 +2,12 @@ import sys
 import numpy as np
 import itertools
 
+"""
+TODO:
+    * Remove the old .mesh and .sol
+    * Fix the obj Exports
+"""
+
 class Mesh:
 
     # .mesh import functions
@@ -26,7 +32,17 @@ class Mesh:
                     if i>self.offset:
                         if self.analyse(i,l):
                             break
+                f.seek(0)
     def readArray(self,f, ind, dim, dt=None):
+        #Allows for searching through n empty lines
+        maxNumberOfEmptylines = 20
+        for i in range(maxNumberOfEmptylines):
+            f.seek(0)
+            firstValidLine = f.readlines()[self.begin[ind]].strip()
+            if firstValidLine == "":
+                self.begin[ind]+=1
+            else:
+                break
         try:
             f.seek(0)
             X = " ".join([l for l in itertools.islice(f, self.begin[ind], self.begin[ind] + self.numItems[ind])])
@@ -58,6 +74,15 @@ class Mesh:
             self.get_infos(self.path[:-5]+".sol")
             with open(self.path[:-5]+".sol") as f:
                     if self.numItems[4]:
+                        #Allows for searching through n empty lines
+                        maxNumberOfEmptylines = 20
+                        for i in range(maxNumberOfEmptylines):
+                            f.seek(0)
+                            firstValidLine = f.readlines()[self.begin[4]].strip()
+                            if firstValidLine == "":
+                                self.begin[4]+=1
+                            else:
+                                break
                         f.seek(0)
                         nItems = len(f.readlines()[self.begin[4]].strip().split())
                         f.seek(0)
@@ -339,12 +364,13 @@ class Mesh:
     # other export functions
     def writeOBJ(self, path):
         with open(path, "w") as f:
-            f.write("o meshExport\n")
+            f.write("o MeshExport\n")
             for v in self.verts:
-                f.write("v %.8f %.8f %.8f\n" % (v[0], v[1], v[2]))
+                f.write( "v %.8f %.8f %.8f\n" % (v[0], v[1], v[2]) )
+            f.write("\n")
             for t in self.tris:
-                f.write("f %i %i %i\n" % (t[0], t[1], t[2]))
-            f.write("end solid")
+                f.write( "f %i %i %i\n" % (t[0], t[1], t[2]) )
+            f.write("\n")
     def writeSTL(self, path):
         with open(path, "w") as f:
             f.write("solid meshExport\n")
@@ -369,7 +395,12 @@ class Mesh:
                 f.write('%.8f %.8f %.8f\n' % (v[0],v[1],v[2]))
             f.write("\n")
             #Writing the cells
-            f.write("CELLS " + str(len(self.tets) + len(self.tris)) + " " + str(5 * len(self.tets) + 4 * len(self.tris)) + "\n")
+            f.write("CELLS "
+            #+ str(len(self.tets)) + " "
+            #+ str(5 * len(self.tets)) + "\n"
+            + str(len(self.tets) + len(self.tris)) + " "
+            + str(5 * len(self.tets) + 4 * len(self.tris)) + "\n"
+            )
             if len(self.tris)>0:
                 for t in self.tris:
                     f.write("3 %i %i %i\n" % (t[0], t[1], t[2]))
@@ -378,7 +409,7 @@ class Mesh:
                 for t in self.tets:
                     f.write("4 %i %i %i %i\n" % (t[0], t[1], t[2], t[3]))
                 f.write("\n")
-            f.write("CELL_TYPES " + str(len(self.tets)) + "\n")
+            f.write("CELL_TYPES " + str(len(self.tets) + len(self.tris)) + "\n")
             if len(self.tris)>0:
                 for t in self.tris:
                     f.write("5\n")
@@ -388,7 +419,7 @@ class Mesh:
             f.write("\n")
             # Writing the scalar and vector data
             if len(self.scalars)>0 or len(self.vectors)>0:
-                dataHeader = "POINT_DATA " + str(len(self.verts)) + "\n"
+                f.write("POINT_DATA " + str(len(self.verts)) + "\n")
                 #Writing the scalar fields
                 if len(self.scalars)>0:
                     f.write("SCALARS pressure float\nLOOKUP_TABLE default\n")
@@ -403,4 +434,3 @@ class Mesh:
         with open(path,"w") as f:
             for v in self.verts:
                 f.write("%.8f %.8f %.8f\n" % (v[0], v[1], v[2]))
-    #def writeOFF(self):
