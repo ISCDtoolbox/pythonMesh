@@ -36,6 +36,7 @@ class uiPanel3(bpy.types.Panel):
             self.layout.operator("mesh.icp", icon="MOD_ARRAY", text="ICP alignement")
         self.layout.operator("mesh.superpcs", icon="MOD_ARRAY", text="Super4PCS alignement")
         self.layout.operator("mesh.bake", icon="RENDER_STILL", text="Baking")
+        self.layout.operator("mesh.adddomain", icon="FORCE_WIND", text="Computational domain")
 
 
 #Maybe add to a menu

@@ -37,7 +37,7 @@ class export_mesh_operator(bpy.types.Operator, ExportHelper):
         else:
             return {'FINISHED'}
 
-def operatorFunction(operator, context, filepath, refAtVerts):
+def operatorFunction(operator, context, filepath, refAtVerts, triangulate):
     #Get the selected object
     APPLY_MODIFIERS = True
     scene = context.scene
