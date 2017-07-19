@@ -9,13 +9,11 @@ bl_info = {
 }
 
 modulesNames = ['msh',
-'icp',
 'operator_bake',
 'operator_cork',
 'operator_export_mesh',
 'operator_import_mesh',
 'operator_import_sequence',
-'operator_icp',
 'operator_mmgs',
 'operator_medit',
 'operator_tetgen_hull',
@@ -26,6 +24,10 @@ modulesNames = ['msh',
 
 import sys
 import importlib
+
+if importlib.find_loader('scipy') is not None:
+    modulesNames.append('icp')
+    modulesNames.append('operator_icp')
 
 modulesFullNames = {}
 for currentModuleName in modulesNames:

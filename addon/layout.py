@@ -1,4 +1,5 @@
 import bpy
+import importlib
 
 #Define the UI layout
 class uiPanel(bpy.types.Panel):
@@ -31,7 +32,8 @@ class uiPanel3(bpy.types.Panel):
     bl_region_type = "TOOLS"
     bl_category    = "ISCD"
     def draw(self, context):
-        self.layout.operator("mesh.icp", icon="MOD_ARRAY", text="ICP alignement")
+        if importlib.find_loader('scipy') is not None:
+            self.layout.operator("mesh.icp", icon="MOD_ARRAY", text="ICP alignement")
         self.layout.operator("mesh.superpcs", icon="MOD_ARRAY", text="Super4PCS alignement")
         self.layout.operator("mesh.bake", icon="RENDER_STILL", text="Baking")
 
