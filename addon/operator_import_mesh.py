@@ -29,7 +29,7 @@ class operator(bpy.types.Operator, ExportHelper):
 def operatorFunction(operator, context, filepath):
 
     mesh = msh.Mesh(filepath)
-    mesh.tets = np.array([])
+    mesh.tets = msh.np.array([])
     mesh.discardUnused()
 
     meshes = []

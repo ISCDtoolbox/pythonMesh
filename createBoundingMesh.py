@@ -264,7 +264,7 @@ if __name__=="__main__":
         print "Error while removing files"
         sys.exit()
     print "-  1.2 - Converting to binary point data"
-    binaryData, totalScale = ptsToXYZCubes(mesh.verts,51)
+    binaryData, totalScale = ptsToXYZCubes(mesh.verts,151)
 
 
     print "2 - Creating the filled volume"
@@ -282,6 +282,7 @@ if __name__=="__main__":
     recon.write(root+".0marchingcubes.mesh")
     del binaryData, newData, recon
 
+    """
 
     print "3 - Meshing the volume"
     print "-  3.1 - Surface remesh"
@@ -379,7 +380,7 @@ if __name__=="__main__":
     final = msh.Mesh(root + ".6wrapping.1.mesh")
     final.tris = final.tris[final.tris[:,-1]>0]
 
-    """
+
     command("medit "+root + ".6wrapping.1.mesh")
     try:
         ref=int(raw_input('Center domain reference: '))
@@ -387,7 +388,7 @@ if __name__=="__main__":
         print "Wrong input type"
         sys.exit()
     final.removeRef(ref,keepTris=True)
-    """
+
 
     final.discardUnused()
     final.write(root+".7.mesh")
@@ -419,6 +420,8 @@ if __name__=="__main__":
 
     #maxRef = np.argmax([ len(final.tets[final.tets[:,-1]==i]) for i in range(10)])
     #maxRef = np.argmin([ len(final.tets[final.tets[:,-1]==i]) for i in range(10)])
+    """
+
 
     """
     mesh = msh.Mesh(sys.argv[1])

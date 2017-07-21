@@ -96,6 +96,8 @@ class domain_operator(bpy.types.Operator):
         active.select = True
         domain.select = True
         bpy.context.scene.objects.active = active
+        for mod in active.modifiers:
+            bpy.ops.object.modifier_apply(modifier = mod.name)
         nbMat = len(active.data.materials)
         bpy.ops.object.join()
 
