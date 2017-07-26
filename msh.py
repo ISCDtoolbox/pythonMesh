@@ -4,12 +4,6 @@ import sys
 import numpy as np
 import itertools
 
-"""
-TODO:
-    * Remove the old .mesh and .sol
-    * Fix the obj Exports
-"""
-
 class Mesh:
 
     # .mesh import functions
@@ -71,47 +65,50 @@ class Mesh:
                 sys.exit()
             sys.exit()
     def readSol(self,path=None):
-        if self.path and not path:
-            self.offset=0
-            self.get_infos(self.path[:-5]+".sol")
-            with open(self.path[:-5]+".sol") as f:
-                    if self.numItems[4]:
-                        #Allows for searching through n empty lines
-                        maxNumberOfEmptylines = 20
-                        for i in range(maxNumberOfEmptylines):
+        try:
+            if self.path and not path:
+                self.offset=0
+                self.get_infos(self.path[:-5]+".sol")
+                with open(self.path[:-5]+".sol") as f:
+                        if self.numItems[4]:
+                            #Allows for searching through n empty lines
+                            maxNumberOfEmptylines = 20
+                            for i in range(maxNumberOfEmptylines):
+                                f.seek(0)
+                                firstValidLine = f.readlines()[self.begin[4]].strip()
+                                if firstValidLine == "":
+                                    self.begin[4]+=1
+                                else:
+                                    break
                             f.seek(0)
-                            firstValidLine = f.readlines()[self.begin[4]].strip()
-                            if firstValidLine == "":
-                                self.begin[4]+=1
-                            else:
-                                break
-                        f.seek(0)
-                        nItems = len(f.readlines()[self.begin[4]].strip().split())
-                        f.seek(0)
-                        #Read a scalar
-                        if nItems == 1:
-                            self.scalars = np.array([float(l) for l in itertools.islice(f, self.begin[4], self.begin[4] + self.numItems[4])])
-                            self.solMin = np.min(self.scalars)
-                            self.solMax = np.max(self.scalars)
+                            nItems = len(f.readlines()[self.begin[4]].strip().split())
+                            f.seek(0)
+                            #Read a scalar
+                            if nItems == 1:
+                                self.scalars = np.array([float(l) for l in itertools.islice(f, self.begin[4], self.begin[4] + self.numItems[4])])
+                                self.solMin = np.min(self.scalars)
+                                self.solMax = np.max(self.scalars)
+                                self.vectors = np.array([])
+                            #Read a vector
+                            if nItems == 3:
+                                self.vectors = np.array([ [float(x) for x in l.strip().split()[:3]] for l in itertools.islice(f, self.begin[4], self.begin[4] + self.numItems[4])])
+                                self.vecMin = np.min(np.linalg.norm(self.vectors,axis=1))
+                                self.vecMax = np.min(np.linalg.norm(self.vectors,axis=1))
+                                self.scalars=np.array([])
+                            #Read a scalar after a vector
+                            if nItems == 4:
+                                self.vectors = np.array([ [float(x) for x in l.strip().split()[:3]] for l in itertools.islice(f, self.begin[4], self.begin[4] + self.numItems[4])])
+                                self.vecMin = np.min(np.linalg.norm(self.vectors,axis=1))
+                                self.vecMax = np.min(np.linalg.norm(self.vectors,axis=1))
+                                f.seek(0)
+                                self.scalars = np.array([float(l.split()[3]) for l in itertools.islice(f, self.begin[4], self.begin[4] + self.numItems[4])])
+                                self.solMin = np.min(self.scalars)
+                                self.solMax = np.max(self.scalars)
+                        else:
+                            self.scalars = np.array([])
                             self.vectors = np.array([])
-                        #Read a vector
-                        if nItems == 3:
-                            self.vectors = np.array([ [float(x) for x in l.strip().split()[:3]] for l in itertools.islice(f, self.begin[4], self.begin[4] + self.numItems[4])])
-                            self.vecMin = np.min(np.linalg.norm(self.vectors,axis=1))
-                            self.vecMax = np.min(np.linalg.norm(self.vectors,axis=1))
-                            self.scalars=np.array([])
-                        #Read a scalar after a vector
-                        if nItems == 4:
-                            self.vectors = np.array([ [float(x) for x in l.strip().split()[:3]] for l in itertools.islice(f, self.begin[4], self.begin[4] + self.numItems[4])])
-                            self.vecMin = np.min(np.linalg.norm(self.vectors,axis=1))
-                            self.vecMax = np.min(np.linalg.norm(self.vectors,axis=1))
-                            f.seek(0)
-                            self.scalars = np.array([float(l.split()[3]) for l in itertools.islice(f, self.begin[4], self.begin[4] + self.numItems[4])])
-                            self.solMin = np.min(self.scalars)
-                            self.solMax = np.max(self.scalars)
-                    else:
-                        self.scalars = np.array([])
-                        self.vectors = np.array([])
+        except:
+            print("No .sol file associated with the .mesh file")
 
     # Constructor
     def __init__(self, path=None, cube=None):

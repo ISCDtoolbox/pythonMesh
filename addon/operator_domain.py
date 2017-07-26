@@ -18,6 +18,7 @@ class domain_operator(bpy.types.Operator):
     scaleY = bpy.props.FloatProperty(name="scaleY", description="scale X", default=2, min=1.1, max=10)
     scaleZ = bpy.props.FloatProperty(name="scaleZ", description="scale X", default=1.2, min=1.1, max=10)
     differentBottom = bpy.props.BoolProperty(name="differentBottom", description="Use a different reference for the bottom boundary", default=False)
+    merge = bpy.props.BoolProperty(name="merge", description="Merge with the original object", default=False)
 
     @classmethod
     def poll(cls, context):
@@ -92,14 +93,15 @@ class domain_operator(bpy.types.Operator):
         domain.modifiers["Subsurf"].render_levels = 3
         bpy.ops.object.modifier_apply(modifier="Subsurf")
 
-        #Join with the mesh
-        active.select = True
-        domain.select = True
-        bpy.context.scene.objects.active = active
-        for mod in active.modifiers:
-            bpy.ops.object.modifier_apply(modifier = mod.name)
-        nbMat = len(active.data.materials)
-        bpy.ops.object.join()
+        if self.merge:
+            #Join with the mesh
+            active.select = True
+            domain.select = True
+            bpy.context.scene.objects.active = active
+            for mod in active.modifiers:
+                bpy.ops.object.modifier_apply(modifier = mod.name)
+            nbMat = len(active.data.materials)
+            bpy.ops.object.join()
 
         #Print the default.nstokes file
         nstokes = ""
@@ -153,10 +155,11 @@ class domain_operator(bpy.types.Operator):
 
     def draw(self, context):
         self.layout.prop(self, "flowAxis", text="Main axis of th fluid flow")
-        self.layout.prop(self, "differentBottom", text="Different ref for the bottom")
         self.layout.prop(self, "scaleX", text="X scale for the domain")
         self.layout.prop(self, "scaleY", text="Y scale for the domain")
         self.layout.prop(self, "scaleZ", text="Z scale for the domain")
+        self.layout.prop(self, "merge", text="Merge the object and the domain")
+        self.layout.prop(self, "differentBottom", text="Different ref for the bottom")
         col = self.layout.column(align=True)
 
 

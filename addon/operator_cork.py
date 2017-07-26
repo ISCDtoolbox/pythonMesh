@@ -6,6 +6,7 @@ D = bpy.data
 #Define the operator names, properties and function
 operatorID   = "mesh.cork"
 operatorText = "Cork boolean operations"
+
 class cork_operator(bpy.types.Operator):
     """Applies existing boolean with the cork suite"""
     bl_idname = operatorID
@@ -78,20 +79,10 @@ class cork_operator(bpy.types.Operator):
             for c in commands:
                 f.write(c + "\n")
 
+        print("The cork files should be available in the current directory\nlaunch sh bool_script.sh to obtain the final .off file")
+
         return {'FINISHED'}
 
-    """
-    def draw(self, context):
-        self.layout.prop(self, "hmin", text="hmin")
-        self.layout.prop(self, "hmax", text="hmax")
-        self.layout.prop(self, "haus", text="hausd")
-        self.layout.prop(self, "hgra", text="hgrad")
-        self.layout.prop(self, "nr", text="nr")
-        self.layout.prop(self, "prev", text="Preview only")
-        col = self.layout.column(align=True)
-        col.label("Pick a material above, or click outside")
-        col.label("of this dialog box to cancel.")
-    """
 
 #register and unregister
 def register():

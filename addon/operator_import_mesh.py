@@ -28,22 +28,18 @@ class operator(bpy.types.Operator, ExportHelper):
             return {'FINISHED'}
 def operatorFunction(operator, context, filepath):
 
-    mesh = msh.Mesh(filepath)
-    mesh.tets = msh.np.array([])
-    mesh.discardUnused()
+    MESH = msh.Mesh(filepath)
+    MESH.readSol()
+    MESH.tets = msh.np.array([])
+    MESH.discardUnused()
 
     meshes = []
-    rTris = mesh.tris[:,-1].tolist() if len(mesh.tris)>0 else []
-    rQuads = mesh.quads[:,-1].tolist() if len(mesh.quads)>0 else []
-    tris = [t.tolist() for t in mesh.tris]
-    quads = [q.tolist() for q in mesh.quads]
-    verts = [v.tolist()[:-1] for v in mesh.verts]
+    rTris = MESH.tris[:,-1].tolist() if len(MESH.tris)>0 else []
+    rQuads = MESH.quads[:,-1].tolist() if len(MESH.quads)>0 else []
+    tris = [t.tolist() for t in MESH.tris]
+    quads = [q.tolist() for q in MESH.quads]
+    verts = [v.tolist()[:-1] for v in MESH.verts]
     REFS = set(rTris + rQuads)
-
-    """Needs to load the solution as vertex weight
-    mesh.readSol()
-    scal = mesh.scalars
-    """
 
     for i,r in enumerate(REFS):
         refFaces = [t[:-1] for t in tris + quads if t[-1]==r]
@@ -54,7 +50,7 @@ def operatorFunction(operator, context, filepath):
         mesh.from_pydata(verts, [], refFaces)
         mesh.validate()
         mesh.update()
-    del verts, tris, quads
+
 
     if not meshes:
         return 1
@@ -84,6 +80,16 @@ def operatorFunction(operator, context, filepath):
     bpy.ops.object.editmode_toggle()
     bpy.ops.mesh.remove_doubles()
     bpy.ops.object.editmode_toggle()
+
+    #Solutions according to the weight paint mode (0 to 1 by default)
+    if len(MESH.scalars) > 0:
+        bpy.ops.object.vertex_group_add()
+        vgrp = bpy.context.active_object.vertex_groups[0]
+        for X in tris+quads:
+            for x in X:
+                vgrp.add([x],MESH.scalars[x],"REPLACE")
+    del MESH
+    del verts, tris, quads
 
     return 0
 
