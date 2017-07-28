@@ -22,6 +22,8 @@ class export_mesh_operator(bpy.types.Operator, ExportHelper):
 
     refAtVerts = bpy.props.BoolProperty(name="refAtVerts", description="reference at vertices", default=False)
     triangulate = bpy.props.BoolProperty(name="triangulate", description="triangulate the mesh", default=True)
+    minSol = bpy.props.FloatProperty(name="minSol", description="Minimum value for the scalar field", default=0)
+    maxSol = bpy.props.FloatProperty(name="maxSol", description="Maximum value for the scalar field", default=1)
 
     @classmethod
     def poll(cls, context):
@@ -37,7 +39,7 @@ class export_mesh_operator(bpy.types.Operator, ExportHelper):
         else:
             return {'FINISHED'}
 
-def operatorFunction(operator, context, filepath, refAtVerts, triangulate):
+def operatorFunction(operator, context, filepath, refAtVerts, triangulate, minSol, maxSol):
     #Get the selected object
     APPLY_MODIFIERS = True
     scene = context.scene
@@ -90,7 +92,7 @@ def operatorFunction(operator, context, filepath, refAtVerts, triangulate):
                     cols[v] = float(GROUP.weight(v))
                 except:
                     continue
-        exportMesh.scalars = msh.np.array(cols)
+        exportMesh.scalars = msh.np.array(cols)*(maxSol - minSol) + minSol
         exportMesh.writeSol(filepath[:-5] + ".sol")
 
     bpy.ops.object.delete()

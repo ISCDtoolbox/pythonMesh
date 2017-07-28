@@ -11,6 +11,7 @@ bl_info = {
 modulesNames = [
 'msh',
 'operator_bake',
+'operator_weight_to_vertex_color',
 'operator_domain',
 'operator_export_mesh',
 'operator_import_mesh',

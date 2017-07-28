@@ -12,6 +12,7 @@ class uiPanel(bpy.types.Panel):
         self.layout.operator("import_mesh.mesh", icon="IMPORT", text="Import .mesh")
         self.layout.operator("export_mesh.mesh", icon="EXPORT", text="Export .mesh")
         self.layout.operator("import_mesh.sequence", icon="ANIM_DATA", text="Import sequence")
+        self.layout.operator("object.weight2vertexcol", icon="MOD_VERTEX_WEIGHT", text="Weight paint to vertex color")
         self.layout.operator("mesh.bake", icon="RENDER_STILL", text="Baking")
         self.layout.operator("mesh.adddomain", icon="FORCE_WIND", text="Add a computational domain")
 class uiPanel2(bpy.types.Panel):

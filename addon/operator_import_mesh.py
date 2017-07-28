@@ -82,7 +82,17 @@ def operatorFunction(operator, context, filepath):
     bpy.ops.object.editmode_toggle()
 
     #Solutions according to the weight paint mode (0 to 1 by default)
-    if len(MESH.scalars) > 0:
+    if len(MESH.vectors) > 0:
+        print("Minimum velocity =", msh.np.min(msh.np.linalg.norm(MESH.vectors,axis=0)))
+        print("Maximum velocity =", msh.np.max(msh.np.linalg.norm(MESH.vectors,axis=0)))
+        bpy.ops.object.vertex_group_add()
+        vgrp = bpy.context.active_object.vertex_groups[0]
+        for X in tris+quads:
+            for x in X:
+                vgrp.add([x],msh.np.linalg.norm(MESH.vectors[x]),"REPLACE")
+    elif len(MESH.scalars) > 0:
+        print("Minimum .sol scalar =", msh.np.min(MESH.scalars))
+        print("Maximum .sol scalar =", msh.np.max(MESH.scalars))
         bpy.ops.object.vertex_group_add()
         vgrp = bpy.context.active_object.vertex_groups[0]
         for X in tris+quads:
