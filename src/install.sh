@@ -22,7 +22,7 @@ then
 fi
 
 #Getting the commons library
-if [ $? -ne 0 ]
+if [ ! -f "$HOME/lib/libCommons.so" ] 
 then
     git clone https://github.com/ISCDtoolbox/Commons.git
     cd Commons
