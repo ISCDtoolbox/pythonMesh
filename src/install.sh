@@ -4,7 +4,7 @@ if [ $? -ne 0 ]
 then
     wget http://ftp.nluug.nl/pub/graphics/blender/release/Blender2.78/blender-2.78c-linux-glibc219-x86_64.tar.bz2
     tar jxf blender-*
-    ln -s blender-2.78c-linux-glibc219-x86_64/blender /usr/local/bin/blender3
+    ln -s blender-2.78c-linux-glibc219-x86_64/blender /usr/local/bin/blender
 fi
 
 #Getting mmgTools
@@ -102,6 +102,7 @@ then
     cd build
     cmake ..
     make -j 8
+    ln -s tetgen /usr/local/bin/tetgen
     cd ../..
 fi
 
@@ -109,7 +110,6 @@ fi
 #Echo the files locations
 which blender
 which mmgs_O3
-locate libCommons.so
 which nstokes
 which elasticity
 which mshdist

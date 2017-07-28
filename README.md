@@ -1,4 +1,4 @@
-# pythonMesh [![Build Status](https://api.travis-ci.org/loicNorgeot/pythonMesh.svg)](https://travis-ci.org/loicNorgeot/pythonMesh)
+# pythonMesh [![Build Status](https://travis-ci.org/ISCDtoolbox/pythonMesh.svg?branch=master)](https://travis-ci.org/ISCDtoolbox/pythonMesh)
 A python module for manipulating .mesh files
 
 ## usage
