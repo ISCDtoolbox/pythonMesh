@@ -5,6 +5,6 @@ python:
 install:
   - pip install numpy
 script:
-  - sudo src/install.sh
+  - sudo sh src/install.sh
   - python src/test.py
   - ls
