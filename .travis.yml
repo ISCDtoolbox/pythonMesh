@@ -4,4 +4,7 @@ python:
   - "2.7"
 install:
   - pip install numpy
-script: python src/test.py
+script:
+  - sudo src/install.sh
+  - python src/test.py
+  - ls

@@ -2,11 +2,11 @@
 which blender
 if [ $? -ne 0 ]
 then
-    wget https://www.blender.org/download/Blender2.78/blender-2.78c-linux-glibc219-x86_64.tar.bz2
-    tar -xvzf blender-2.78c-linux-glibc219-x86_64.tar.bz2
-    ln -s blender-2.78c-linux-glibc219-x86_64/blender /usr/local/bin/blender
+    wget http://ftp.nluug.nl/pub/graphics/blender/release/Blender2.78/blender-2.78c-linux-glibc219-x86_64.tar.bz2
+    tar jxf blender-*
+    ln -s blender-2.78c-linux-glibc219-x86_64/blender /usr/local/bin/blender3
 fi
-    
+
 #Getting mmgTools
 which mmgs_O3
 if [ $? -ne 0 ]
@@ -104,3 +104,14 @@ then
     make -j 8
     cd ../..
 fi
+
+
+#Echo the files locations
+which blender
+which mmgs_O3
+locate libCommons.so
+which nstokes
+which elasticity
+which mshdist
+which medit
+which tetgen
