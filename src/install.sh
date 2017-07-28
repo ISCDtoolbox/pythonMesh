@@ -109,7 +109,6 @@ fi
 #Echo the files locations
 which blender
 which mmgs_O3
-locate libCommons.so
 which nstokes
 which elasticity
 which mshdist
