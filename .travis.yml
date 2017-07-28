@@ -2,7 +2,9 @@ language: python
 python:
   - "2.6"
   - "2.7"
-install:
+before_install:
+  - sudo apt-get update -qq
+  - sudo apt-get install locate -y
   - pip install numpy
 script:
   - sudo sh src/install.sh
