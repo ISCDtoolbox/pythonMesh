@@ -22,7 +22,6 @@ then
 fi
 
 #Getting the commons library
-locate libCommons.so
 if [ $? -ne 0 ]
 then
     git clone https://github.com/ISCDtoolbox/Commons.git

@@ -2,10 +2,9 @@ language: python
 python:
   - "2.6"
   - "2.7"
-before_install:
+install:
   - sudo apt-get update -qq
   - pip install numpy
-  - sudo apt-get install locate -y
   - sudo apt-get install freeglut3-dev
   - sudo apt-get install libxmu-dev
   - sudo apt-get install libxi-dev
