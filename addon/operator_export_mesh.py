@@ -22,8 +22,8 @@ class export_mesh_operator(bpy.types.Operator, ExportHelper):
 
     refAtVerts = bpy.props.BoolProperty(name="refAtVerts", description="reference at vertices", default=False)
     triangulate = bpy.props.BoolProperty(name="triangulate", description="triangulate the mesh", default=True)
-    minSol = bpy.props.FloatProperty(name="minSol", description="Minimum value for the scalar field", default=0)
-    maxSol = bpy.props.FloatProperty(name="maxSol", description="Maximum value for the scalar field", default=1)
+    miniSol = bpy.props.FloatProperty(name="miniSol", description="Minimum value for the scalar field", default=0, subtype="FACTOR")
+    maxiSol = bpy.props.FloatProperty(name="maxiSol", description="Maximum value for the scalar field", default=1, subtype="FACTOR")
 
     @classmethod
     def poll(cls, context):
@@ -39,7 +39,7 @@ class export_mesh_operator(bpy.types.Operator, ExportHelper):
         else:
             return {'FINISHED'}
 
-def operatorFunction(operator, context, filepath, refAtVerts, triangulate, minSol, maxSol):
+def operatorFunction(operator, context, filepath, refAtVerts, triangulate, miniSol, maxiSol):
     #Get the selected object
     APPLY_MODIFIERS = True
     scene = context.scene
@@ -92,7 +92,14 @@ def operatorFunction(operator, context, filepath, refAtVerts, triangulate, minSo
                     cols[v] = float(GROUP.weight(v))
                 except:
                     continue
-        exportMesh.scalars = msh.np.array(cols)*(maxSol - minSol) + minSol
+        try:
+            mini = bpy.context.scene["mmgsMini"]
+            maxi = bpy.context.scene["mmgsMaxi"]
+            exportMesh.scalars = msh.np.array(cols)*(maxi - mini) + mini
+            print("Min and max vallues taken from the scene property")
+        except:
+            exportMesh.scalars = msh.np.array(cols)*(maxiSol - miniSol) + miniSol
+            print("Min and max vallues taken from the operator property")
         exportMesh.writeSol(filepath[:-5] + ".sol")
 
     bpy.ops.object.delete()

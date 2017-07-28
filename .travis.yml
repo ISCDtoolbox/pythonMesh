@@ -4,6 +4,10 @@ python:
   - "2.7"
 install:
   - pip install numpy
+  - sudo apt-get -qq update
+  - sudo apt-get install freeglut3-dev
+  - sudo apt-get install libxmu-dev
+  - sudo apt-get install libxi-dev
 script:
   - sudo src/install.sh
   - python src/test.py

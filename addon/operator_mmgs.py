@@ -41,6 +41,8 @@ class mmgs_operator(bpy.types.Operator):
         if not hasTriangulate:
             bpy.ops.object.modifier_add(type='TRIANGULATE')
 
+        bpy.context.scene["mmgsMini"] = self.hmin*maxDim
+        bpy.context.scene["mmgsMaxi"] = self.hmax*maxDim
         bpy.ops.export_mesh.mesh(filepath="tmp.mesh")
         bpy.context.scene.objects.active = obj
 
@@ -77,6 +79,7 @@ class mmgs_operator(bpy.types.Operator):
         self.layout.prop(self, "hgra", text="hgrad")
         self.layout.prop(self, "nr", text="nr")
         self.layout.prop(self, "ar", text="ar")
+        self.layout.prop(self, "sol", text="Use solution")
         self.layout.prop(self, "prev", text="Preview only")
         col = self.layout.column(align=True)
         col.label("Pick a material above, or click outside")
