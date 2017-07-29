@@ -4,3 +4,4 @@
 *.stl
 *.xyz
 *.obj
+.DS*

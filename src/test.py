@@ -11,7 +11,7 @@ if __name__=="__main__":
     mesh.caracterize()
 
     #Exports the mesh in different formats
-    mesh.verts+=[100,100,100,0]
+    mesh.verts+=[100.,100.,100.,0]
     mesh.writeXYZ("demo/Theatre.xyz")
     mesh.writeSTL("demo/Theatre.stl")
     mesh.writeOBJ("demo/Theatre.obj")
