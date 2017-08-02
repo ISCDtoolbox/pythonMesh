@@ -60,7 +60,7 @@ You should now have two new tabs on the left part of the Tools menu (which can b
 
 ### 2.1 - Preparing the simulation in blender
 * 1 - Model a High Resolution object: it can be as complex or heavy (millions of points) as you wish
-* 2 - Create a Low Resolution copy (remeshed, or a new object made from scratch) of your object, removing details but staying loyal to your objects surface.
+* 2 - Create a Low Resolution copy (remeshed, or a new object made from scratch) of your object, removing details but staying loyal to your objects surface. **Check that your object is closed and has no intersection with the 3D print toolbox**
 * 3 - (optional) add a computational domain to your LR model
 * 4 - Create different materials for the fluid inlet, the outlet, the obstacle (your mesh) and the boundaries of your domain (if you had to go through step 3)
 * 5 - Export your LR model to .mesh format
@@ -91,4 +91,6 @@ You should now have two new tabs on the left part of the Tools menu (which can b
 * 3 - Adjust the materials
 * 4 - Render
 
-## 3 - Example
+### 3.1 - Examples
+* [Fluid outside an object](docs/fluidsOutside.md)
+* [Fluid inside  an object](docs/fluidsInside.md)
