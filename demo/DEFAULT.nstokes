@@ -1,0 +1,10 @@
+Dirichlet
+4
+1 triangle v 0. 0. 0.
+3 triangle v 0. -1. 0.
+4 triangle v 0. 0. 0.
+5 triangle v 0. 0. 0.
+
+Domain
+1
+1 1. 1.

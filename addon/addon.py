@@ -343,7 +343,7 @@ class domain_operator(bpy.types.Operator):
                 nstokes += str(s[0]) + " triangle v " + s[1] + "\n"
             nstokes+="\n"
         nstokes+="Gravity\n0. 0. -0.1\n\n"
-        nstokes+="Domain\n1 1. 1."
+        nstokes+="Domain\n1\n1 1. 1."
         print(nstokes)
 
         return {'FINISHED'}

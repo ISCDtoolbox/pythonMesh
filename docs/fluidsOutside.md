@@ -61,3 +61,55 @@ mmg3d suzanne.1.d.mesh
 Writes in + "suzanne.1.d.o.mesh"
 
 ![](https://user-images.githubusercontent.com/11873158/28868921-3e7a200a-777b-11e7-92f1-d8acd68a559e.png)
+
+### Parameter file
+Save as DEFAULT.nstokes in the same directory that your remeshed object
+```bash
+Dirichlet # Type of boundary condition
+3 # 3 different regions for boundary conditions
+1 triangle v 0. 0. 0. # The region of reference has a null velocity
+2 triangle v 0. 1. 0. # The region of reference 2 is the input : v = (0,-1,0)
+4 triangle v 0. 0. 0. # 4 also has a null velocity
+
+Domain
+1 #The number of domains in which we are computing the flow
+1 1. 1. # reference one (red tetrahedras), nu and rho
+```
+
+### Running the simulation
+```bash
+nstokes -r 0.005 suzanne.1.d.o.mesh
+```
+
+### Looking at results
+The original file has been modified, and should now contain the vector and scalar fields.
+```bash
+medit suzanne.1.d.o.mesh
+```
+
+### Converting to paraview
+We have to write a file compatible with paraview in order
+```bash
+python pythonMesh/src/convertToParaview.py suzanne.1.d.o.mesh
+```
+A file called suzanne.1.d.o.vtk has been created (hopefully)
+
+### Visualizations in Paraview
+A whole new tool...
+
+Import the vtk file in paraview, and apply your filters.
+
+When you are satisfied, go to File -> Export Scene and choose .x3d format. You will be able to open that file in blender.
+
+![](https://user-images.githubusercontent.com/11873158/28874459-33f19a3e-7792-11e7-9916-25f10aa110ce.png)
+
+### Importing back in blender
+You can now import back the x3d file in blender, to visualize the results.
+
+File -> import -> .x3d
+
+However, you will see that the axis are not aligned. To fix this, you must rotate your results in blender:
+* R + x + 90
+* R + z + 180
+Be sure to rotate around the origin of the scene!
+![](https://user-images.githubusercontent.com/11873158/28874328-b44e9994-7791-11e7-8e64-7f68d7cdd36b.png)
