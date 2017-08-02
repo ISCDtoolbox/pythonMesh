@@ -1,7 +1,7 @@
 # pythonMesh [![Build Status](https://travis-ci.org/ISCDtoolbox/pythonMesh.svg?branch=master)](https://travis-ci.org/ISCDtoolbox/pythonMesh)
 A python module for manipulating .mesh files
 
-##ISCD summer school
+## ISCD summer school
 Please, refer to the [Related page](docs/summerschool.md)
 
 ## python example
