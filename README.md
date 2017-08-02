@@ -1,7 +1,10 @@
 # pythonMesh [![Build Status](https://travis-ci.org/ISCDtoolbox/pythonMesh.svg?branch=master)](https://travis-ci.org/ISCDtoolbox/pythonMesh)
 A python module for manipulating .mesh files
 
-## usage
+##ISCD summer school
+Please, refer to the [Related page](docs/summerschool.md)
+
+## python example
 ```python
 import msh
 # Import, modify and save a .mesh as .vtk file
@@ -12,10 +15,10 @@ mesh.scale(0.1)
 mesh.writeVTK("myFile.vtk")
 ```
 
-## blender addon
+## external tools
 Adds useful mesh manipulation options and interfaces:
 * [tetgen](http://wias-berlin.de/software/tetgen/)
-* [mmgTools](http://wias-berlin.de/software/tetgen/)
+* [mmgTools](https://www.mmgtools.org/)
 * [ISCDtoolbox](https://github.com/ISCDtoolbox)
 * [cork boolean operations](https://github.com/gilbo/cork)
 * [super4PCS](https://github.com/nmellado/Super4PCS)

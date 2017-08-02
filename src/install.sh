@@ -3,8 +3,10 @@
 #export PATH=$PATH:/path/to/dir
 
 #Installing dependencies for medit
-sudo apt-get install libxmu-dev libxi-dev
+#sudo apt-get install libxmu-dev libxi-dev
 
+#Installing numpy
+pip install numpy
 
 #Getting blender
 #which blender
