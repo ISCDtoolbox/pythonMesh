@@ -92,5 +92,5 @@ You should now have two new tabs on the left part of the Tools menu (which can b
 * 4 - Render
 
 ### 3.1 - Examples
-* [Fluid outside an object](docs/fluidsOutside.md)
-* [Fluid inside  an object](docs/fluidsInside.md)
+* [Fluid outside an object](fluidsOutside.md)
+* [Fluid inside  an object](fluidsInside.md)
