@@ -61,10 +61,12 @@ medit /path/to/the/exported/object/myObject(.o).1.mesh
 
 We will now remove the unnecessary geometry (tetrahedra *inside* your LR mesh if you used an exterior domain, and blue triangles) created by **tetgen**.
 
-If you used a computational domain (flow outside an object), get the reference of the tetrahedra inside your object (let's say 27), and type in a terminal:
+If you used a computational domain (flow outside an object), get the reference of the tetrahedra inside your object (with medit, **Shift + click** on the inside domain gives you the reference in the terminal), and execute:
 ```bash
-python /path/to/pythonMesh/src/removeReference.py /path/to/myObject.1.mesh 27
+python /path/to/pythonMesh/src/removeReference.py /path/to/myObject.1.mesh theReferenceOfTheInsideDomain
 ```
+Make sure to replace *theReferenceOfTheInsideDomain* with the actual reference of the inside domain.
+
 If you want to simulate the flow inside an object, just type:
 ```bash
 python /path/to/pythonMesh/src/removeReference.py /path/to/myObject.1.mesh 0
