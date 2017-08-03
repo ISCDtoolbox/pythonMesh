@@ -8,6 +8,7 @@ if __name__=="__main__":
         sys.exit()
     mesh = msh.Mesh(sys.argv[1])
     mesh.removeRef(int(sys.argv[2]), keepTris=True)
+    mesh.removeRef(0)
     mesh.discardUnused()
     mesh.write(sys.argv[1][:-4] + "d.mesh")
     print("Cleaned file written to " + sys.argv[1][:-4] + "d.mesh")

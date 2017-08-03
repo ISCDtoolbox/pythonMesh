@@ -2,7 +2,7 @@
 A python module for manipulating .mesh files
 
 ## ISCD summer school
-Please, refer to the [Related page](docs/summerschool.md)
+Just jump to the [Cheatsheet](docs/cheatsheet.md), or visit the [Related page](docs/summerschool.md)
 
 ## python example
 ```python
